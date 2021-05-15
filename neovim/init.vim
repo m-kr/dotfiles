@@ -32,17 +32,45 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'kien/rainbow_parentheses.vim'
 Plug 'nathanaelkane/vim-indent-guides'
+" Plug 'preservim/nerdtree'
+Plug 'scrooloose/nerdTree'
+
 " Themes
 Plug 'ghifarit53/tokyonight-vim'
-" Plug 'morhetz/gruvbox'
 
 " Initialize plugin system
 call plug#end()
 
 let g:mapleader = "\<Space>"
 
-let g:fzf_nvim_statusline = 0 " disable statusline overwriting
+" NERDTree bindings
+let NERDTreeQuitOnOpen = 1
+let NERDTreeAutoDeleteBuffer = 1
+let NERDTreeMinimalUI = 1
+let NERDTreeDirArrows = 1
 
+" Check if NERDTree is open or active
+function! IsNERDTreeOpen()
+  return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
+endfunction
+
+" Call NERDTreeFind iff NERDTree is active, current window contains a modifiable
+" file, and we're not in vimdiff
+function! SyncTree()
+  if &modifiable && IsNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
+    NERDTreeFind
+    wincmd p
+  endif
+endfunction
+
+" Highlight currently open buffer in NERDTree
+autocmd BufRead * call SyncTree()
+nnoremap <leader>n :NERDTreeFocus<CR>
+nnoremap <C-t> :NERDTreeToggle<CR>
+nnoremap <C-f> :NERDTreeFind<CR>
+
+" FZF bingings
+let g:fzf_nvim_statusline = 0 " disable statusline overwriting
 nnoremap <silent> <leader><space> :GFiles<CR>
 nnoremap <silent> <leader>a :Buffers<CR>
 nnoremap <silent> <leader>A :Windows<CR>
@@ -85,9 +113,6 @@ command! -nargs=+ -complete=dir AgIn call SearchWithAgInDirectory(<f-args>)
 
 inoremap jk <ESC>
 
-" Coc Explorer
-nnoremap <silent> <leader>e :CocCommand explorer<CR>
-
 command! -nargs=0 Prettier :CocCommand prettier.formatFile
 
 " j/k will move virtual lines (lines that wrap)
@@ -107,6 +132,7 @@ let g:tokyonight_style = 'night' " available: night, storm
 let g:tokyonight_enable_italic = 1
 colorscheme tokyonight
 let g:airline_theme='tokyonight'
+let g:rainbow_active = 1
 
 " let g:gruvbox_contrast_dark = 'medium'
 " colorscheme gruvbox
@@ -117,8 +143,12 @@ autocmd FileType twig,scss,css,javascript,php autocmd BufWritePre <buffer> %s/\s
 autocmd BufWritePre * :%s/\s\+$//e
 " Line numbers
 set relativenumber
+" search caseinsensitive
+set ignorecase
 autocmd WinEnter,FocusGained * :setlocal number relativenumber
 autocmd WinLeave,FocusLost   * :setlocal number norelativenumber
+" coc scss mixins support
+autocmd FileType scss setl iskeyword+=@-@
 
 " coc config
 let g:coc_global_extensions = [
@@ -132,7 +162,6 @@ let g:coc_global_extensions = [
   \ 'coc-css',
   \ 'coc-phpls',
   \ 'coc-emmet',
-  \ 'coc-explorer',
   \ ]
 
 " from readme
@@ -146,9 +175,7 @@ set nofixeol
 " don't give |ins-completion-menu| messages.
 set shortmess+=c
 
-" always show signcolumns
-set signcolumn=yes
-
+let &colorcolumn="80,".join(range(120,999),",")
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
 inoremap <silent><expr> <TAB>
@@ -312,15 +339,17 @@ autocmd BufWritePre * :call TrimWhitespace()
 
 "Git workflow
 let g:fzf_checkout_git_options = '--sort=-committerdate'
+let g:fzf_preview_window = 'right:50%'
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6  }  }
 nnoremap <space>gb :GBranches<CR>
 
+let g:fugitive_pty = 0
 nmap <leader>gs :G<CR>
 nmap <leader>gh :diffget //3<CR>
 nmap <leader>gf :diffget //2<CR>
 nnoremap <space>ga :Git add %:p<CR><CR>
-nnoremap <space>gs :Gstatus<CR>
-nnoremap <space>gc :Gcommit -v -q<CR>
-nnoremap <space>gt :Gcommit -v -q %:p<CR>
+nnoremap <space>gc :Git commit -v -q<CR>
+nnoremap <space>gt :Git commit -v -q %:p<CR>
 nnoremap <space>gd :Gdiff<CR>
 nnoremap <space>ge :Gedit<CR>
 nnoremap <space>gr :Gread<CR>
@@ -329,6 +358,5 @@ nnoremap <space>gl :silent! Glog<CR>:bot copen<CR>
 nnoremap <space>gp :Ggrep<Space>
 nnoremap <space>gm :Gmove<Space>
 nnoremap <space>go :Git checkout<Space>
+nnoremap <space>gpl :Git pull<CR>
 nnoremap <space>gps :Git -c push.default=current push<CR>
-" nnoremap <space>gps :Dispatch! git push<CR>
-nnoremap <space>gpl :Dispatch! git pull<CR>
