@@ -1,4 +1,4 @@
-" Specify a directory for plugins
+"m/vim-airline/vim-airline-themes Specify a directory for plugins
 call plug#begin('~/.vim/plugged')
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -25,6 +25,7 @@ Plug 'tpope/vim-eunuch'
 Plug 'vim-test/vim-test'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'kkoomen/vim-doge', { 'do': { -> doge#install() } }
+Plug 'alvan/vim-closetag'
 
 " UI
 Plug 'vim-airline/vim-airline'
@@ -37,6 +38,11 @@ Plug 'scrooloose/nerdTree'
 
 " Themes
 Plug 'ghifarit53/tokyonight-vim'
+Plug 'whatyouhide/vim-gotham'
+Plug 'arcticicestudio/nord-vim'
+Plug 'joshdick/onedark.vim'
+Plug 'rakr/vim-one'
+Plug 'morhetz/gruvbox'
 
 " Initialize plugin system
 call plug#end()
@@ -128,14 +134,21 @@ set expandtab
 set autoindent
 set termguicolors
 
-let g:tokyonight_style = 'night' " available: night, storm
-let g:tokyonight_enable_italic = 1
-colorscheme tokyonight
-let g:airline_theme='tokyonight'
+""""""""
+" Autoclose tags
+let g:closetag_filenames = '*.html,*.twig,*.php,*.js,*.vue'
+""""""""
 let g:rainbow_active = 1
 
-" let g:gruvbox_contrast_dark = 'medium'
+" Color scheme
+" let g:tokyonight_style = 'night' " available: night, storm
+" let g:tokyonight_enable_italic = 1
+colorscheme one
+let g:airline_theme='onedark'
+
+" let g:gruvbox_contrast_dark = 'dark'
 " colorscheme gruvbox
+" let g:AirlineTheme='base16_colors'
 " let g:airline_theme='gruvbox'
 
 autocmd FileType twig,scss,css,javascript,php autocmd BufWritePre <buffer> %s/\s\+$//e
@@ -358,5 +371,5 @@ nnoremap <space>gl :silent! Glog<CR>:bot copen<CR>
 nnoremap <space>gp :Ggrep<Space>
 nnoremap <space>gm :Gmove<Space>
 nnoremap <space>go :Git checkout<Space>
-nnoremap <space>gpl :Git pull<CR>
+nnoremap <space>gpl :exec "Git pull origin " . fugitive#head()<CR>
 nnoremap <space>gps :Git -c push.default=current push<CR>
