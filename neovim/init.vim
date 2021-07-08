@@ -9,6 +9,7 @@ Plug 'terryma/vim-multiple-cursors'
 Plug 'kamykn/spelunker.vim'
 Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-surround'
+Plug 'easymotion/vim-easymotion'
 
 " Languages/syntax
 Plug 'leafOfTree/vim-vue-plugin'
@@ -16,6 +17,8 @@ Plug 'nelsyeung/twig.vim'
 Plug 'ap/vim-css-color'
 Plug 'yuezk/vim-js'
 Plug 'StanAngeloff/php.vim'
+" Plug 'evanleck/vim-svelte', {'branch': 'main'}
+Plug 'leafOfTree/vim-svelte-plugin'
 
 " DEV Tools
 Plug 'tpope/vim-fugitive'
@@ -43,6 +46,7 @@ Plug 'arcticicestudio/nord-vim'
 Plug 'joshdick/onedark.vim'
 Plug 'rakr/vim-one'
 Plug 'morhetz/gruvbox'
+Plug 'tomasiser/vim-code-dark'
 
 " Initialize plugin system
 call plug#end()
@@ -54,6 +58,17 @@ let NERDTreeQuitOnOpen = 1
 let NERDTreeAutoDeleteBuffer = 1
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
+let NERDTreeWinPos = 1
+let g:NERDTreeWinSize = 45
+
+" Easy Motion
+let g:EasyMotion_do_mapping = 0
+let g:EasyMotion_smartcase = 1
+map  <silent> s <Plug>(easymotion-bd-w)
+nmap <silent> s <Plug>(easymotion-overwin-w)
+nmap f <Plug>(easymotion-overwin-f2)
+map <C-j> <Plug>(easymotion-j)
+map <C-k> <Plug>(easymotion-k)
 
 " Check if NERDTree is open or active
 function! IsNERDTreeOpen()
@@ -133,6 +148,7 @@ set smartindent
 set expandtab
 set autoindent
 set termguicolors
+set nowrap
 
 """"""""
 " Autoclose tags
@@ -141,10 +157,23 @@ let g:closetag_filenames = '*.html,*.twig,*.php,*.js,*.vue'
 let g:rainbow_active = 1
 
 " Color scheme
-" let g:tokyonight_style = 'night' " available: night, storm
+" let g:tokyonight_style = 'storm' " available: night, storm
 " let g:tokyonight_enable_italic = 1
-colorscheme one
-let g:airline_theme='onedark'
+" colorscheme tokyonight
+" let g:airline_theme='tokyonight'
+
+if &term =~ '256color'
+  " disable Background Color Erase (BCE)
+  set t_ut=
+endif
+set t_Co=256
+set t_ut=
+
+colorscheme codedark
+let g:airline_theme='codedark'
+"
+" Frameworks
+let g:vim_svelte_plugin_use_sass = 1
 
 " let g:gruvbox_contrast_dark = 'dark'
 " colorscheme gruvbox
@@ -175,7 +204,9 @@ let g:coc_global_extensions = [
   \ 'coc-css',
   \ 'coc-phpls',
   \ 'coc-emmet',
+  \ 'coc-svelte',
   \ ]
+
 
 " from readme
 " if hidden is not set, TextEdit might fail.

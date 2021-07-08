@@ -1,8 +1,29 @@
+# 0 is too far from ` ;)
+set -g base-index 1
+
+# Automatically set window title
+set-option -g set-titles on
+
+#set -g default-terminal screen-256color
+
+bind-key v split-window -h
+bind-key s split-window -v
+
+bind-key J resize-pane -D 5
+bind-key K resize-pane -U 5
+bind-key H resize-pane -L 5
+bind-key L resize-pane -R 5
+
+bind-key M-j resize-pane -D
+bind-key M-k resize-pane -U
+bind-key M-h resize-pane -L
+bind-key M-l resize-pane -R
+unbind C-j
+
 # https://github.com/gpakosz/.tmux
 # (‑●‑●)> dual licensed under the WTFPL v2 license and the MIT license,
 #         without any warranty.
 #         Copyright 2012— Gregory Pakosz (@gpakosz).
-
 
 # -- navigation ----------------------------------------------------------------
 
@@ -23,8 +44,6 @@ tmux_conf_new_window_retain_current_path=false
 
 # new pane retains current path, possible values are:
 #   - true (default)
-#   - false
-tmux_conf_new_pane_retain_current_path=true
 
 # new pane tries to reconnect ssh sessions (experimental), possible values are:
 #   - true
@@ -291,6 +310,9 @@ tmux_conf_copy_to_os_clipboard=false
 # unbind C-b
 # set -g prefix C-a
 # bind C-a send-prefix
+
+unbind C-b
+set -g prefix C-Space
 
 # move status line to top
 #set -g status-position top
